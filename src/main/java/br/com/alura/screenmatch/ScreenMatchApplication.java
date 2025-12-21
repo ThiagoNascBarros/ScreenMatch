@@ -19,10 +19,14 @@ public class ScreenMatchApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        System.out.println("ScreenMatchApplication started");
         var address = "https://www.omdbapi.com/?t=gilmore+girls&apikey=abd3a916";
         ConsumerAPI api = new ConsumerAPI();
+        ConvertData cvtData = new ConvertData();
+
         var response = ConsumerAPI.getDataOfAPI(address);
+        var data = cvtData.convertData(response, Serie.class);
+
+        System.out.println(data.toString());
     }
 
 }
