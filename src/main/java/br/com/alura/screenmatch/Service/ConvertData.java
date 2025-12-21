@@ -1,0 +1,16 @@
+package br.com.alura.screenmatch.Service;
+
+import br.com.alura.screenmatch.Interfaces.IConvertData;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+public class ConvertData implements IConvertData {
+
+    private ObjectMapper mapper = new ObjectMapper();
+
+    @Override
+    public <T> T convertData(String json, Class<T> classT) throws JsonProcessingException {
+        return mapper.readValue(json, classT);
+    }
+
+}
