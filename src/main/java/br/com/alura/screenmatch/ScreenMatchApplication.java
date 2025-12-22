@@ -1,5 +1,6 @@
 package br.com.alura.screenmatch;
 
+import br.com.alura.screenmatch.Domain.Episode;
 import br.com.alura.screenmatch.Domain.Serie;
 import br.com.alura.screenmatch.Service.ConsumerAPI;
 import br.com.alura.screenmatch.Service.ConvertData;
@@ -17,13 +18,17 @@ public class ScreenMatchApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         var address = "https://www.omdbapi.com/?t=gilmore+girls&apikey=abd3a916";
-        ConsumerAPI api = new ConsumerAPI();
         ConvertData cvtData = new ConvertData();
 
         var response = ConsumerAPI.getDataOfAPI(address);
-        var data = cvtData.convertData(response, Serie.class);
+        var dataSerie = cvtData.convertData(response, Serie.class);
+        System.out.println(dataSerie.toString());
 
-        System.out.println(data.toString());
+        address = "https://www.omdbapi.com/?t=gilmore+girls&season=1&episode=1&apikey=abd3a916";
+        response = ConsumerAPI.getDataOfAPI(address);
+        var dataEpisode = cvtData.convertData(response, Episode.class);
+        System.out.println(dataEpisode.toString());
+
     }
 
 }

@@ -13,6 +13,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 * */
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record Serie (@JsonProperty("Title") String Title,
-                     @JsonProperty("imdbRating") String Assessment,
+public record Serie (@JsonProperty("Title") String title,
+                     @JsonProperty("imdbRating") String assessment,
                      @JsonProperty("totalSeasons") Integer totalSeasons) { }
