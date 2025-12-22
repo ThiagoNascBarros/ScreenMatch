@@ -6,11 +6,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class ConvertData implements IConvertData {
 
-    private ObjectMapper mapper = new ObjectMapper();
+    private final ObjectMapper mapper = new ObjectMapper();
 
     @Override
-    public <T> T convertData(String json, Class<T> classT) throws JsonProcessingException {
-        return mapper.readValue(json, classT);
+    public <T> T convertData(String json, Class<T> classT) {
+        try {
+            return mapper.readValue(json, classT);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
+
 
 }
