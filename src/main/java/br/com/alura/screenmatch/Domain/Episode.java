@@ -1,7 +1,5 @@
 package br.com.alura.screenmatch.Domain;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
@@ -11,6 +9,25 @@ public class Episode {
     private Integer number;
     private Double assessment;
     private LocalDate releaseDate;
+
+    public Episode(Integer numberSeason, DataEpisode dte) {
+        this.season = numberSeason;
+        this.title = dte.title();
+        this.number = dte.number();
+
+        try {
+            this.assessment = Double.valueOf(dte.assessment());
+        } catch (NumberFormatException e) {
+            this.assessment = 0.0;
+        }
+
+        try {
+            this.releaseDate = LocalDate.parse(dte.releaseDate());
+        } catch (DateTimeParseException e) {
+            this.releaseDate = null;
+        }
+    }
+
     public Integer getSeason() {
         return season;
     }
