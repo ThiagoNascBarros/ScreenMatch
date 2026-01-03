@@ -37,13 +37,13 @@ public class Main {
             var menu = """
                   \s
                   ================ Menu ================
-                  1 - Search series
-                  2 - Search episodes
+                  1 - Save serie
+                  2 - Search serie and save episodes
                   3 - List searched series
                   4 - Search serie in database
-                  5 - Search series of one actor - Database
+                  5 - Search series of one actor
                   0 - Exit
-                  Enter your option:\s""";
+                  Enter your option:""";
 
             System.out.println(menu);
             option = input.nextInt();
@@ -114,10 +114,9 @@ public class Main {
         String nameActor = input.nextLine();
 
         var listOfSerieWithActor = serieRepository.findByActorsContainingIgnoreCase(nameActor);
-
-        listOfSerieWithActor.stream()
-                .map(Serie::getTitle)
-                .forEach(System.out::println);
+        listOfSerieWithActor
+                .forEach(s -> System.out.println("Participated in: " + s.getTitle() +
+                        " with assessment: " + s.getAssessment()));
     }
 
     private void listSearchedSeries() {
