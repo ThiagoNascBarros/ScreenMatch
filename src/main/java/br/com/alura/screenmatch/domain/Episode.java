@@ -1,16 +1,25 @@
 package br.com.alura.screenmatch.domain;
 
 import br.com.alura.screenmatch.communication.RecordEpisode;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.UUID;
 
+@Entity
+@Table(name = "episodes")
 public class Episode {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
     private Integer season;
     private String title;
     private Integer number;
     private Double assessment;
     private LocalDate releaseDate;
+    @ManyToOne
+    private Serie serie;
 
     public Episode(Integer numberSeason, RecordEpisode dte) {
         this.season = numberSeason;
@@ -28,6 +37,24 @@ public class Episode {
         } catch (DateTimeParseException e) {
             this.releaseDate = null;
         }
+    }
+
+    public Episode() { }
+
+    public Serie getSerie() {
+        return serie;
+    }
+
+    public void setSerie(Serie serie) {
+        this.serie = serie;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public Integer getSeason() {

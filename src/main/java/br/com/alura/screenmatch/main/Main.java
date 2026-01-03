@@ -1,24 +1,31 @@
 package br.com.alura.screenmatch.main;
 
-import br.com.alura.screenmatch.service.ConsumerAPI;
-import br.com.alura.screenmatch.service.ConvertData;
 import br.com.alura.screenmatch.communication.RecordSeasons;
 import br.com.alura.screenmatch.communication.RecordSerie;
 import br.com.alura.screenmatch.domain.Serie;
+import br.com.alura.screenmatch.exception.DuplicateDataError;
+import br.com.alura.screenmatch.repository.SerieRepository;
+import br.com.alura.screenmatch.service.ConsumerAPI;
+import br.com.alura.screenmatch.service.ConvertData;
+import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
 public class Main {
-    private static final Logger logger = LoggerFactory.getLogger(Main.class);
     private final String ADDRESS = "https://www.omdbapi.com/?t=";
     private final String APIKEY = "&apikey=abd3a916";
-    private List<RecordSerie> seriesSearches = new ArrayList<>();
+    private final SerieRepository serieRepository;
 
+    private static final Logger logger = LoggerFactory.getLogger(Main.class);
     private static final Scanner input = new Scanner(System.in);
     private static final ConsumerAPI consumer = new ConsumerAPI();
     private static final ConvertData cvtData = new ConvertData();
+
+    public Main(SerieRepository serieRepository) {
+        this.serieRepository = serieRepository;
+    }
 
     public void showMenu() {
         int option = 1;
@@ -67,21 +74,24 @@ public class Main {
     }
 
     private void searchSerieWeb() {
-        RecordSerie dados = getDataSerie();
-        seriesSearches.add(dados);
-        System.out.println(dados);
+        RecordSerie data = getDataSerie();
+        Serie serie = new Serie(data);
+
+        try {
+            serieRepository.save(serie);
+        } catch (ConstraintViolationException ex) {
+            throw new DuplicateDataError("Error of datas duplicates");
+        }
+
+        System.out.println(data);
     }
 
     private void listSearchedSeries() {
-        List<Serie> series;
-
-        series = seriesSearches.stream()
-                .map(Serie::new)
-                .toList();
+        var series = serieRepository.findAll();
 
         series.stream()
                 .sorted(Comparator.comparing(Serie::getGenre))
-                .forEach(serie -> logger.warn(serie.toString()));
+                .forEach(serie -> logger.info(serie.toString()));
     }
 
     private void searchEpPutSerie() {
