@@ -1,6 +1,6 @@
-package br.com.alura.screenmatch.Service;
+package br.com.alura.screenmatch.service;
 
-import br.com.alura.screenmatch.Interfaces.IConvertData;
+import br.com.alura.screenmatch.interfaces.IConvertData;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

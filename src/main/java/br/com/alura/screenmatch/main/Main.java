@@ -1,7 +1,7 @@
-package br.com.alura.screenmatch.Main;
+package br.com.alura.screenmatch.main;
 
-import br.com.alura.screenmatch.Service.ConsumerAPI;
-import br.com.alura.screenmatch.Service.ConvertData;
+import br.com.alura.screenmatch.service.ConsumerAPI;
+import br.com.alura.screenmatch.service.ConvertData;
 import br.com.alura.screenmatch.communication.RecordSeasons;
 import br.com.alura.screenmatch.communication.RecordSerie;
 import br.com.alura.screenmatch.domain.Serie;
@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Main {
     private static final Logger logger = LoggerFactory.getLogger(Main.class);

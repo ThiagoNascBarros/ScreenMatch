@@ -1,4 +1,4 @@
-package br.com.alura.screenmatch.Service;
+package br.com.alura.screenmatch.service;
 
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.model.chat.ChatModel;
@@ -6,9 +6,11 @@ import dev.langchain4j.model.chat.request.ChatRequest;
 import dev.langchain4j.model.googleai.GoogleAiGeminiChatModel;
 import io.github.cdimascio.dotenv.Dotenv;
 
-public class ConsumerOpenAI {
-    public static final Dotenv dotenv = Dotenv.load();
+public class ConsumerGeminiAI {
+    private static final Dotenv dotenv = Dotenv.load();
     private static final String KEY = dotenv.get("API_KEY_GEM");
+
+    private ConsumerGeminiAI() {}
 
     public static String getTranslate(String text) {
         ChatModel gemini = GoogleAiGeminiChatModel.builder()
@@ -22,5 +24,4 @@ public class ConsumerOpenAI {
 
         return response.aiMessage().text();
     }
-
 }
