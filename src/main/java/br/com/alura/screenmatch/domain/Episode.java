@@ -99,10 +99,14 @@ public class Episode {
 
     @Override
     public String toString() {
-        return  "season=" + season +
-                ", title='" + title + '\'' +
-                ", number=" + number +
-                ", assessment=" + assessment +
-                ", releaseDate=" + releaseDate;
+        return """
+            Episode {
+              season      = %s
+              title       = '%s'
+              number      = %d
+              assessment  = %s
+              releaseDate = %s
+            }
+            """.formatted(season, title, number, assessment, releaseDate);
     }
 }
