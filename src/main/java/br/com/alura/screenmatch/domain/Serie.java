@@ -1,6 +1,6 @@
 package br.com.alura.screenmatch.domain;
 
-import br.com.alura.screenmatch.Service.ConsumerOpenAI;
+import br.com.alura.screenmatch.service.ConsumerGeminiAI;
 import br.com.alura.screenmatch.communication.RecordSerie;
 import br.com.alura.screenmatch.domain.enums.ECategory;
 import jakarta.annotation.Nonnull;
@@ -23,7 +23,7 @@ public class Serie {
                 .orElse(0);
         this.totalSeasons = req.totalSeasons();
         this.genre = ECategory.fromString(req.genre().split(",")[0].trim());
-        this.plot = ConsumerOpenAI.getTranslate(req.plot().trim());
+        this.plot = ConsumerGeminiAI.getTranslate(req.plot().trim());
         this.actors = req.actors();
         this.poster = req.poster();
     }
