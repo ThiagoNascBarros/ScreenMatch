@@ -40,6 +40,8 @@ public class Main {
                   1 - Search series
                   2 - Search episodes
                   3 - List searched series
+                  4 - Search serie in database
+                  5 - Search series of one actor - Database
                   0 - Exit
                   Enter your option:\s""";
 
@@ -55,6 +57,12 @@ public class Main {
                         break;
                     case 3:
                         listSearchedSeries();
+                        break;
+                    case 4:
+                        searchSerieDatabase();
+                        break;
+                    case 5:
+                        searchActorsOfSerieDatabase();
                         break;
                     case 0:
                         logger.info("Exit...");
@@ -87,6 +95,29 @@ public class Main {
         }
 
         System.out.println(data);
+    }
+
+    private void searchSerieDatabase() {
+        System.out.println("Enter title of your serie the database: ");
+        var serieName = input.nextLine();
+
+        var serie = serieRepository.findByTitleContainingIgnoreCase(serieName);
+        if (serie.isPresent()) {
+            System.out.println(serie);
+        } else {
+            logger.info("Serie not found");
+        }
+    }
+
+    private void searchActorsOfSerieDatabase() {
+        System.out.println("Enter actors of your serie the database: ");
+        String nameActor = input.nextLine();
+
+        var listOfSerieWithActor = serieRepository.findByActorsContainingIgnoreCase(nameActor);
+
+        listOfSerieWithActor.stream()
+                .map(Serie::getTitle)
+                .forEach(System.out::println);
     }
 
     private void listSearchedSeries() {

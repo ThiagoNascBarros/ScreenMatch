@@ -27,7 +27,7 @@ public class Serie {
     @OneToMany(mappedBy = "serie",
             cascade = CascadeType.ALL,
             fetch = FetchType.EAGER)
-    private List<Episode> episodes =  new ArrayList<>();
+    private List<Episode> episodes = new ArrayList<>();
 
     public Serie(RecordSerie req) {
         this.title = req.title();
