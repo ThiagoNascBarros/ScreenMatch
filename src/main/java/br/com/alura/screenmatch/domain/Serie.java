@@ -4,18 +4,34 @@ import br.com.alura.screenmatch.service.ConsumerGeminiAI;
 import br.com.alura.screenmatch.communication.RecordSerie;
 import br.com.alura.screenmatch.domain.enums.ECategory;
 import jakarta.annotation.Nonnull;
+import jakarta.persistence.*;
 
 import java.util.OptionalDouble;
+import java.util.UUID;
 
+@Entity()
+@Table(name = "series")
 public class Serie {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+
+    @Column(unique = true)
     private String title;
+
     private Double assessment;
+
     private Integer totalSeasons;
+
+    @Enumerated(EnumType.STRING)
     private ECategory genre;
+
     private String plot;
+
     private String actors;
-    private final String poster;
+
+    private String poster;
 
     public Serie(RecordSerie req) {
         this.title = req.title();
@@ -26,6 +42,26 @@ public class Serie {
         this.plot = ConsumerGeminiAI.getTranslate(req.plot().trim());
         this.actors = req.actors();
         this.poster = req.poster();
+    }
+
+    public Serie() {
+
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public String getPoster() {
+        return poster;
+    }
+
+    public void setPoster(String poster) {
+        this.poster = poster;
     }
 
     public String getTitle() {
