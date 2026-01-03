@@ -8,7 +8,7 @@ import java.net.http.HttpResponse;
 
 public class ConsumerAPI {
 
-    public static String getDataOfAPI(String address) {
+    public String getDataOfAPI(String address) {
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(address))

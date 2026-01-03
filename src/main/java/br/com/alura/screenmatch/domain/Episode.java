@@ -1,4 +1,6 @@
-package br.com.alura.screenmatch.Domain;
+package br.com.alura.screenmatch.domain;
+
+import br.com.alura.screenmatch.communication.RecordEpisode;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
@@ -10,7 +12,7 @@ public class Episode {
     private Double assessment;
     private LocalDate releaseDate;
 
-    public Episode(Integer numberSeason, DataEpisode dte) {
+    public Episode(Integer numberSeason, RecordEpisode dte) {
         this.season = numberSeason;
         this.title = dte.title();
         this.number = dte.number();
