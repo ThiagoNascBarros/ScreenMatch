@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.UUID;
 
-public interface SerieRepository extends JpaRepository<Serie, UUID> {
+public interface ISerieRepository extends JpaRepository<Serie, UUID> {
 }

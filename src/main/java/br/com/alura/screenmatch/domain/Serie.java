@@ -6,10 +6,7 @@ import br.com.alura.screenmatch.domain.enums.ECategory;
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.OptionalDouble;
-import java.util.UUID;
+import java.util.*;
 
 @Entity()
 @Table(name = "series")
@@ -27,7 +24,9 @@ public class Serie {
     private String plot;
     private String actors;
     private String poster;
-    @OneToMany(mappedBy = "serie")
+    @OneToMany(mappedBy = "serie",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER)
     private List<Episode> episodes =  new ArrayList<>();
 
     public Serie(RecordSerie req) {
@@ -112,6 +111,7 @@ public class Serie {
     }
 
     public void setEpisodes(List<Episode> episodes) {
+        episodes.forEach(e -> e.setSerie(this));
         this.episodes = episodes;
     }
 
@@ -126,14 +126,18 @@ public class Serie {
                         "  totalSeasons = %d%n" +
                         "  plot         = '%s'%n" +
                         "  actors        = '%s'%n" +
-                        "  poster       = '%s'%n" ,
+                        "  poster       = '%s'%n" +
+                        "  episodes       = '%s'%n",
                 genre.getCategoryOMDb(),
                 title,
                 assessment,
                 totalSeasons,
                 plot,
                 actors,
-                poster
+                poster,
+                Arrays.toString(episodes.stream()
+                        .map(Episode::getTitle)
+                        .toArray(String[]::new))
         );
     }
 

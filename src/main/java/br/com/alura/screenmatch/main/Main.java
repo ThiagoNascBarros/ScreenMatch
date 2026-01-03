@@ -2,9 +2,10 @@ package br.com.alura.screenmatch.main;
 
 import br.com.alura.screenmatch.communication.RecordSeasons;
 import br.com.alura.screenmatch.communication.RecordSerie;
+import br.com.alura.screenmatch.domain.Episode;
 import br.com.alura.screenmatch.domain.Serie;
 import br.com.alura.screenmatch.exception.DuplicateDataError;
-import br.com.alura.screenmatch.repository.SerieRepository;
+import br.com.alura.screenmatch.repository.ISerieRepository;
 import br.com.alura.screenmatch.service.ConsumerAPI;
 import br.com.alura.screenmatch.service.ConvertData;
 import org.hibernate.exception.ConstraintViolationException;
@@ -12,18 +13,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Main {
     private final String ADDRESS = "https://www.omdbapi.com/?t=";
     private final String APIKEY = "&apikey=abd3a916";
-    private final SerieRepository serieRepository;
+    private final ISerieRepository serieRepository;
+    private List<Serie> series = new ArrayList<>();
 
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
     private static final Scanner input = new Scanner(System.in);
     private static final ConsumerAPI consumer = new ConsumerAPI();
     private static final ConvertData cvtData = new ConvertData();
 
-    public Main(SerieRepository serieRepository) {
+    public Main(ISerieRepository serieRepository) {
         this.serieRepository = serieRepository;
     }
 
@@ -87,7 +90,7 @@ public class Main {
     }
 
     private void listSearchedSeries() {
-        var series = serieRepository.findAll();
+        series = serieRepository.findAll();
 
         series.stream()
                 .sorted(Comparator.comparing(Serie::getGenre))
@@ -95,30 +98,42 @@ public class Main {
     }
 
     private void searchEpPutSerie() {
-        var dataSerie = getDataSerie();
-        List<RecordSeasons> seasons = new ArrayList<>();
+        listSearchedSeries();
 
-        for (int i = 1; i <= dataSerie.totalSeasons(); i++) {
-            var json = consumer.getDataOfAPI(ADDRESS + dataSerie.title()
-                    .replace(" ", "+")
-                    .toLowerCase() +
-                    "&season=" + i + APIKEY);
+        System.out.println("Enter the serie name to search: ");
+        var nameSerie = input.nextLine();
 
-            seasons.add(cvtData.convertData(json, RecordSeasons.class));
+        var dataSerie = series.stream()
+                .filter(s -> s.getTitle().toLowerCase()
+                        .contains(nameSerie.toLowerCase()))
+                .findFirst();
+
+        if (dataSerie.isPresent()) {
+            List<RecordSeasons> seasons = new ArrayList<>();
+            var serie = dataSerie.get();
+
+            for (int i = 1; i <= serie.getTotalSeasons(); i++) {
+                var json = consumer.getDataOfAPI(ADDRESS + serie.getTitle()
+                        .replace(" ", "+")
+                        .toLowerCase() +
+                        "&season=" + i + APIKEY);
+
+                seasons.add(cvtData.convertData(json, RecordSeasons.class));
+            }
+
+            seasons.forEach(System.out::println);
+
+            var episodes = seasons.stream()
+                    .flatMap(s -> s.episodes().stream()
+                            .map(e -> new Episode(s.number(), e)))
+                    .collect(Collectors.toList());
+
+            serie.setEpisodes(episodes);
+
+            serieRepository.save(serie);
+        } else {
+            logger.error("Serie not found");
         }
-
-        seasons.forEach(System.out::println);
-    }
-
-    private void learningLambdas() {
-        List<String> names = Arrays.asList("Iasmin", "Thiago", "Isabela", "Laura");
-
-        names.stream()
-                .sorted()
-                .limit(3)
-                .filter(n -> n.startsWith("I"))
-                .map(String::toUpperCase)
-                .forEach(System.out::println);
     }
 
 }
