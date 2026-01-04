@@ -4,6 +4,7 @@ import br.com.alura.screenmatch.communication.RecordSeasons;
 import br.com.alura.screenmatch.communication.RecordSerie;
 import br.com.alura.screenmatch.domain.Episode;
 import br.com.alura.screenmatch.domain.Serie;
+import br.com.alura.screenmatch.domain.enums.ECategory;
 import br.com.alura.screenmatch.exception.DuplicateDataError;
 import br.com.alura.screenmatch.repository.ISerieRepository;
 import br.com.alura.screenmatch.service.ConsumerAPI;
@@ -42,6 +43,9 @@ public class Main {
                   3 - List searched series
                   4 - Search serie in database
                   5 - Search series of one actor
+                  6 - Top five series
+                  7 - Search series by category
+                  8 - Search series with assessment limit
                   0 - Exit
                   Enter your option:""";
 
@@ -63,6 +67,15 @@ public class Main {
                         break;
                     case 5:
                         searchActorsOfSerieDatabase();
+                        break;
+                    case 6:
+                        searchTopFiveSeries();
+                        break;
+                    case 7:
+                        searchSerieByCategory();
+                        break;
+                    case 8:
+                        searchSerieByTitleWithAssesmentLimit();
                         break;
                     case 0:
                         logger.info("Exit...");
@@ -113,7 +126,10 @@ public class Main {
         System.out.println("Enter actors of your serie the database: ");
         String nameActor = input.nextLine();
 
-        var listOfSerieWithActor = serieRepository.findByActorsContainingIgnoreCase(nameActor);
+        System.out.println("Assessment from what value? ");
+        var assessment = input.nextDouble();
+
+        var listOfSerieWithActor = serieRepository.findByActorsContainingIgnoreCaseAndAssessmentGreaterThanEqual(nameActor, assessment);
         listOfSerieWithActor
                 .forEach(s -> System.out.println("Participated in: " + s.getTitle() +
                         " with assessment: " + s.getAssessment()));
@@ -164,6 +180,38 @@ public class Main {
         } else {
             logger.error("Serie not found");
         }
+    }
+
+    private void searchTopFiveSeries() {
+        List<Serie> topSeries = serieRepository.findTop5ByOrderByAssessmentDesc();
+        topSeries.forEach(serie -> logger.info(serie.getTitle() + " | assessment: " + serie.getAssessment()));
+    }
+
+    private void searchSerieByCategory() {
+        System.out.println("Enter category of serie you want to search: ");
+        var nameCategory = input.nextLine();
+
+        var category = ECategory.fromPortuguese(nameCategory);
+
+        List<Serie> seriesByCategory = serieRepository.findByGenre(category);
+
+        seriesByCategory.stream()
+                .sorted(Comparator.comparing(Serie::getGenre))
+                .forEach(System.out::println);
+    }
+
+    private void searchSerieByTitleWithAssesmentLimit() {
+        System.out.println("Enter title of serie you want to search: ");
+        String title = input.nextLine();
+
+        System.out.println("Enter limit of assessment: ");
+        Double assessment = input.nextDouble();
+
+        var series = serieRepository.findByTitleContainingIgnoreCaseAndAssessmentGreaterThan(title, assessment);
+
+        series.stream()
+                .sorted(Comparator.comparing(Serie::getGenre))
+                .forEach(s -> logger.info(s.toString()));
     }
 
 }
