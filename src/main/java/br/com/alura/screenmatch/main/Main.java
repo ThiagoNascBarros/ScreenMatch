@@ -6,6 +6,7 @@ import br.com.alura.screenmatch.domain.Episode;
 import br.com.alura.screenmatch.domain.Serie;
 import br.com.alura.screenmatch.domain.enums.ECategory;
 import br.com.alura.screenmatch.exception.DuplicateDataError;
+import br.com.alura.screenmatch.exception.NotFoundSerie;
 import br.com.alura.screenmatch.repository.ISerieRepository;
 import br.com.alura.screenmatch.service.ConsumerAPI;
 import br.com.alura.screenmatch.service.ConvertData;
@@ -46,6 +47,8 @@ public class Main {
                   6 - Top five series
                   7 - Search series by category
                   8 - Search series with assessment limit
+                  9 - Search episodes by segment
+                  10 - Top five episodes for serie
                   0 - Exit
                   Enter your option:""";
 
@@ -76,6 +79,12 @@ public class Main {
                         break;
                     case 8:
                         searchSerieByTitleWithAssesmentLimit();
+                        break;
+                    case 9:
+                        searchEpisodeBySegment();
+                        break;
+                    case 10:
+                        topEpisodesBySerie();
                         break;
                     case 0:
                         logger.info("Exit...");
@@ -196,22 +205,58 @@ public class Main {
         List<Serie> seriesByCategory = serieRepository.findByGenre(category);
 
         seriesByCategory.stream()
-                .sorted(Comparator.comparing(Serie::getGenre))
+                .sorted(Comparator.comparing(Serie::getAssessment))
                 .forEach(System.out::println);
     }
 
     private void searchSerieByTitleWithAssesmentLimit() {
-        System.out.println("Enter title of serie you want to search: ");
-        String title = input.nextLine();
+        System.out.println("Enter total seasons of serie you want to search: ");
+        int totalSeasons = input.nextInt();
 
         System.out.println("Enter limit of assessment: ");
         Double assessment = input.nextDouble();
 
-        var series = serieRepository.findByTitleContainingIgnoreCaseAndAssessmentGreaterThan(title, assessment);
+        var series = serieRepository.seriesForSeasonsAndAssessment(totalSeasons, assessment);
 
         series.stream()
                 .sorted(Comparator.comparing(Serie::getGenre))
                 .forEach(s -> logger.info(s.toString()));
+    }
+
+    private void searchEpisodeBySegment() {
+        System.out.println("Whats name episode for search? ");
+        var segment = input.nextLine();
+
+        List<Episode> episodes = serieRepository.episodesBySegment(segment);
+
+        episodes.forEach(e -> System.out.printf("Series: %s - Season %s - Episode %s - %s\n",
+                e.getSerie().getTitle(), e.getSeason(),
+                e.getNumber(), e.getTitle()));
+    }
+
+    private void topEpisodesBySerie() {
+        var serie = getSerie();
+
+        serie.ifPresentOrElse(s -> {
+            List<Episode> episodes = serieRepository.topEpisodesBySerie(serie);
+            episodes.forEach(e -> System.out.printf("Series: %s - Season %s - Episode %s - %s - Assessment %s\n",
+                    e.getSerie().getTitle(), e.getSeason(),
+                    e.getNumber(), e.getTitle(), e.getAssessment()));
+        }, () -> {
+            throw new NotFoundSerie("Serie not found");
+        });
+    }
+
+    private Optional<Serie> getSerie() {
+        System.out.println("Enter title of your serie the database: ");
+        var serieName = input.nextLine();
+
+        var serie = serieRepository.findByTitleContainingIgnoreCase(serieName);
+        if (serie.isPresent()) {
+            return serie;
+        } else {
+            throw new NotFoundSerie("Serie not found");
+        }
     }
 
 }
