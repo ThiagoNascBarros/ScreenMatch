@@ -23,4 +23,7 @@ public interface ISerieRepository extends JpaRepository<Serie, UUID> {
 
     @Query("select s from Serie s where s.totalSeasons <= :totalSeasons and s.assessment >= :assessment")
     List<Serie> seriesForSeasonsAndAssessment(int totalSeasons, Double assessment);
+
+    @Query("SELECT e FROM Serie s JOIN s.episodes e WHERE e.title ILIKE %:segment%")
+    List<Episode> episodesBySegment(String segment);
 }
