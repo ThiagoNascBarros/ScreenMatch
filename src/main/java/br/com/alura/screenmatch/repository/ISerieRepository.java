@@ -5,11 +5,13 @@ import br.com.alura.screenmatch.domain.Serie;
 import br.com.alura.screenmatch.domain.enums.ECategory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Repository
 public interface ISerieRepository extends JpaRepository<Serie, UUID> {
     Optional<Serie> findByTitleContainingIgnoreCase(String title);
 
@@ -30,4 +32,8 @@ public interface ISerieRepository extends JpaRepository<Serie, UUID> {
     @Query("SELECT e FROM Serie s JOIN s.episodes e WHERE s = :serie " +
             "ORDER BY e.assessment DESC LIMIT 5")
     List<Episode> topEpisodesBySerie(Optional<Serie> serie);
+
+    @Query("SELECT e FROM Serie s JOIN s.episodes e WHERE s = :serie " +
+            "AND YEAR(e.releaseDate) >= :year ")
+    List<Episode> episodesBySerieAndYear(Optional<Serie> serie, int year);
 }

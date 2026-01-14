@@ -5,11 +5,15 @@ import br.com.alura.screenmatch.communication.RecordSerie;
 import br.com.alura.screenmatch.domain.enums.ECategory;
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.*;
 
 @Entity()
 @Table(name = "series")
+@Data
 public class Serie {
 
     @Id
@@ -41,79 +45,6 @@ public class Serie {
     }
 
     public Serie() { }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getPoster() {
-        return poster;
-    }
-
-    public void setPoster(String poster) {
-        this.poster = poster;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public Double getAssessment() {
-        return assessment;
-    }
-
-    public void setAssessment(Double assessment) {
-        this.assessment = assessment;
-    }
-
-    public Integer getTotalSeasons() {
-        return totalSeasons;
-    }
-
-    public void setTotalSeasons(Integer totalSeasons) {
-        this.totalSeasons = totalSeasons;
-    }
-
-    public ECategory getGenre() {
-        return genre;
-    }
-
-    public void setGenre(ECategory genre) {
-        this.genre = genre;
-    }
-
-    public String getPlot() {
-        return plot;
-    }
-
-    public void setPlot(String plot) {
-        this.plot = plot;
-    }
-
-    public String getActors() {
-        return actors;
-    }
-
-    public void setActors(String actors) {
-        this.actors = actors;
-    }
-
-    public List<Episode> getEpisodes() {
-        return episodes;
-    }
-
-    public void setEpisodes(List<Episode> episodes) {
-        episodes.forEach(e -> e.setSerie(this));
-        this.episodes = episodes;
-    }
 
     @Override
     @Nonnull

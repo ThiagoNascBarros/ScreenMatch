@@ -49,6 +49,7 @@ public class Main {
                   8 - Search series with assessment limit
                   9 - Search episodes by segment
                   10 - Top five episodes for serie
+                  11 - Search Episodes by date
                   0 - Exit
                   Enter your option:""";
 
@@ -85,6 +86,9 @@ public class Main {
                         break;
                     case 10:
                         topEpisodesBySerie();
+                        break;
+                    case 11:
+                        searchEpisodesByDate();
                         break;
                     case 0:
                         logger.info("Exit...");
@@ -242,6 +246,21 @@ public class Main {
             episodes.forEach(e -> System.out.printf("Series: %s - Season %s - Episode %s - %s - Assessment %s\n",
                     e.getSerie().getTitle(), e.getSeason(),
                     e.getNumber(), e.getTitle(), e.getAssessment()));
+        }, () -> {
+            throw new NotFoundSerie("Serie not found");
+        });
+    }
+
+    private void searchEpisodesByDate(){
+        var serie = getSerie();
+        serie.ifPresentOrElse(s -> {
+            System.out.println("Enter year limit: ");
+            var year = input.nextInt();
+            input.nextLine();
+
+            List<Episode> episodesByYear = serieRepository.episodesBySerieAndYear(serie, year);
+
+            episodesByYear.forEach(System.out::println);
         }, () -> {
             throw new NotFoundSerie("Serie not found");
         });
