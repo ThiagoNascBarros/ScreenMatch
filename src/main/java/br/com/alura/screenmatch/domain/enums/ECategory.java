@@ -1,5 +1,7 @@
 package br.com.alura.screenmatch.domain.enums;
 
+import lombok.Getter;
+
 public enum ECategory {
     ACTION("Action", "Ação"),
     ROMANCE("Romance", "Romance"),
@@ -7,12 +9,9 @@ public enum ECategory {
     CRIME("Crime", "Crime"),
     DRAMA("Drama", "Drama");
 
+    @Getter
     private String categoryOMDb;
     private String categoryPortuguese;
-
-    public String getCategoryOMDb() {
-        return categoryOMDb;
-    }
 
     ECategory(String categoryOMDb, String categoryPortuguese) {
         this.categoryOMDb = categoryOMDb;
@@ -30,7 +29,7 @@ public enum ECategory {
 
     public static ECategory fromPortuguese(String text) {
         for (ECategory categoria : ECategory.values()) {
-            if (categoria.categoryPortuguese.equalsIgnoreCase(text)) {
+            if (categoria.categoryPortuguese    .equalsIgnoreCase(text)) {
                 return categoria;
             }
         }
