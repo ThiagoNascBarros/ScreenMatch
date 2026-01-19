@@ -1,4 +1,4 @@
-package br.com.alura.screenmatch.communication;
+package br.com.alura.screenmatch.communication.response;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

@@ -1,13 +1,12 @@
 package br.com.alura.screenmatch.domain;
 
+import br.com.alura.screenmatch.communication.request.RequestRegisterSerie;
 import br.com.alura.screenmatch.service.ConsumerGeminiAI;
-import br.com.alura.screenmatch.communication.RecordSerie;
+import br.com.alura.screenmatch.communication.response.RecordSerie;
 import br.com.alura.screenmatch.domain.enums.ECategory;
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.util.*;
 
@@ -45,6 +44,16 @@ public class Serie {
     }
 
     public Serie() { }
+
+    public Serie(RequestRegisterSerie request) {
+        this.title = request.title();
+        this.assessment = request.assessment();
+        this.totalSeasons = request.totalSeasons();
+        this.genre = ECategory.fromString(request.genre().split(",")[0].trim());
+        this.plot = ConsumerGeminiAI.getTranslate(request.plot().trim());
+        this.actors = request.actors();
+        this.poster = request.poster();
+    }
 
     @Override
     @Nonnull

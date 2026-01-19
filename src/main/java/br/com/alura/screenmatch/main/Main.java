@@ -1,7 +1,7 @@
 package br.com.alura.screenmatch.main;
 
-import br.com.alura.screenmatch.communication.RecordSeasons;
-import br.com.alura.screenmatch.communication.RecordSerie;
+import br.com.alura.screenmatch.communication.response.RecordSeasons;
+import br.com.alura.screenmatch.communication.response.RecordSerie;
 import br.com.alura.screenmatch.domain.Episode;
 import br.com.alura.screenmatch.domain.Serie;
 import br.com.alura.screenmatch.domain.enums.ECategory;

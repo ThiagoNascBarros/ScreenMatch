@@ -29,10 +29,11 @@ public enum ECategory {
 
     public static ECategory fromPortuguese(String text) {
         for (ECategory categoria : ECategory.values()) {
-            if (categoria.categoryPortuguese    .equalsIgnoreCase(text)) {
+            if (categoria.categoryPortuguese.equalsIgnoreCase(text)) {
                 return categoria;
             }
         }
+
         throw new IllegalArgumentException("No category found for the given string: " + text);
     }
 }

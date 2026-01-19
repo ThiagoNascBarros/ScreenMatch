@@ -1,5 +1,7 @@
 package br.com.alura.screenmatch.repository;
 
+import br.com.alura.screenmatch.communication.response.ResponsePost;
+import br.com.alura.screenmatch.communication.response.ResponseSerie;
 import br.com.alura.screenmatch.domain.Episode;
 import br.com.alura.screenmatch.domain.Serie;
 import br.com.alura.screenmatch.domain.enums.ECategory;
@@ -36,4 +38,13 @@ public interface ISerieRepository extends JpaRepository<Serie, UUID> {
     @Query("SELECT e FROM Serie s JOIN s.episodes e WHERE s = :serie " +
             "AND YEAR(e.releaseDate) >= :year ")
     List<Episode> episodesBySerieAndYear(Optional<Serie> serie, int year);
+
+    @Query("SELECT s FROM Serie s JOIN s.episodes e GROUP BY s ORDER BY MAX(e.releaseDate) DESC LIMIT 5")
+    List<Serie> findTopFiveSeries();
+
+    @Query("select e from Serie s join s.episodes e where s.id = :id and e.season = :numberSeason")
+    List<Episode> getEpisodesBySeasons(UUID id, Integer numberSeason);
+
+
+
 }

@@ -1,6 +1,6 @@
 package br.com.alura.screenmatch.domain;
 
-import br.com.alura.screenmatch.communication.RecordEpisode;
+import br.com.alura.screenmatch.communication.response.RecordEpisode;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
